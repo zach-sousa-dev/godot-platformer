@@ -10,7 +10,7 @@ var state := states.AIRBORNE
 
 func _physics_process(delta: float) -> void:
 	# Change grounded state based on input
-	if is_on_floor() and Input.is_action_pressed("sprint"): # TODO: fix FSM
+	if is_on_floor() and Input.is_action_pressed("sprint"): # TODO: fix FSM as gravity not longer works
 		state = states.RUNNING
 	elif not is_on_floor():
 		state = states.AIRBORNE
