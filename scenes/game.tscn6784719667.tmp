@@ -1,0 +1,92 @@
+[gd_scene load_steps=11 format=3 uid="uid://bu1vqdexh22q7"]
+
+[ext_resource type="Texture2D" uid="uid://bhlqo8qk7hanh" path="res://icon.svg" id="1_uwrxv"]
+[ext_resource type="Script" uid="uid://b1b3djnu4fj07" path="res://scripts/player.gd" id="1_yqjtg"]
+[ext_resource type="Texture2D" uid="uid://dvdp4hl6drpwi" path="res://assets/mario_jump.png" id="3_u5sy4"]
+[ext_resource type="Texture2D" uid="uid://dmey828wtp1dt" path="res://assets/mario_stand.png" id="4_gee14"]
+[ext_resource type="Texture2D" uid="uid://caeaua8le70jl" path="res://assets/mario_walk_1.png" id="5_0tnpc"]
+[ext_resource type="Texture2D" uid="uid://cqpllqmm3nduv" path="res://assets/mario_walk_2.png" id="6_vtaks"]
+[ext_resource type="Texture2D" uid="uid://c5cpgdbyxf2t0" path="res://assets/mario_walk_3.png" id="7_kvpfn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mwb40"]
+size = Vector2(1099, 92)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yqjtg"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dinhu"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_u5sy4")
+}],
+"loop": true,
+"name": &"jump",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_0tnpc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_vtaks")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_kvpfn")
+}],
+"loop": true,
+"name": &"run",
+"speed": 15.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_gee14")
+}],
+"loop": true,
+"name": &"stand",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_0tnpc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_vtaks")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_kvpfn")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 8.0
+}]
+
+[node name="Game" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+visibility_layer = 0
+position = Vector2(0, -100)
+zoom = Vector2(3, 3)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(4, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(-4, 0)
+scale = Vector2(8.735, 0.73)
+texture = ExtResource("1_uwrxv")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("RectangleShape2D_mwb40")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+position = Vector2(0, -100)
+script = ExtResource("1_yqjtg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+scale = Vector2(0.81, 0.81)
+shape = SubResource("RectangleShape2D_yqjtg")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CharacterBody2D"]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_dinhu")
+animation = &"run"
