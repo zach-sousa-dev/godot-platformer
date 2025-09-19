@@ -1,5 +1,6 @@
-[gd_scene load_steps=16 format=3 uid="uid://bu1vqdexh22q7"]
+[gd_scene load_steps=21 format=3 uid="uid://bu1vqdexh22q7"]
 
+[ext_resource type="FontFile" uid="uid://ddqfi5nrbi6vi" path="res://assets/Super Mario Bros. NES.ttf" id="1_kvpfn"]
 [ext_resource type="Texture2D" uid="uid://byaqjvjqpysh6" path="res://assets/world.png" id="1_u5sy4"]
 [ext_resource type="Script" uid="uid://b1b3djnu4fj07" path="res://scripts/player.gd" id="1_yqjtg"]
 [ext_resource type="Texture2D" uid="uid://dvdp4hl6drpwi" path="res://assets/mario_jump.png" id="3_u5sy4"]
@@ -8,6 +9,9 @@
 [ext_resource type="Texture2D" uid="uid://cqpllqmm3nduv" path="res://assets/mario_walk_2.png" id="6_vtaks"]
 [ext_resource type="Texture2D" uid="uid://c5cpgdbyxf2t0" path="res://assets/mario_walk_3.png" id="7_kvpfn"]
 [ext_resource type="AudioStream" uid="uid://c33ae02xjh0mq" path="res://assets/jump_small.wav" id="8_gee14"]
+[ext_resource type="Script" uid="uid://djxqb6fp28l15" path="res://scenes/coin.gd" id="9_0tnpc"]
+[ext_resource type="AudioStream" uid="uid://fxpgvibfxqg" path="res://assets/coin.wav" id="10_vtaks"]
+[ext_resource type="Script" uid="uid://bvbu4kjc3b827" path="res://scenes/coin_label.gd" id="12_dinhu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mwb40"]
 size = Vector2(1410.5, 92)
@@ -73,6 +77,8 @@ animations = [{
 "speed": 8.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dinhu"]
+
 [node name="Game" type="Node2D"]
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -116,18 +122,78 @@ shape = SubResource("RectangleShape2D_kvpfn")
 position = Vector2(-253, -132)
 shape = SubResource("RectangleShape2D_kvpfn")
 
-[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+[node name="player" type="CharacterBody2D" parent="."]
 position = Vector2(0, -100)
 script = ExtResource("1_yqjtg")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player"]
 scale = Vector2(0.81, 0.81)
 shape = SubResource("RectangleShape2D_yqjtg")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CharacterBody2D"]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="player"]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_dinhu")
 animation = &"run"
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="CharacterBody2D"]
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="player"]
 stream = ExtResource("8_gee14")
+
+[node name="Coin2" type="Area2D" parent="."]
+position = Vector2(40, -126)
+script = ExtResource("9_0tnpc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Coin2"]
+shape = SubResource("RectangleShape2D_dinhu")
+
+[node name="Sprite2D" type="Sprite2D" parent="Coin2"]
+texture_filter = 1
+texture = ExtResource("6_vtaks")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Coin2"]
+stream = ExtResource("10_vtaks")
+
+[node name="Coin" type="Area2D" parent="."]
+position = Vector2(150, -100)
+script = ExtResource("9_0tnpc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Coin"]
+shape = SubResource("RectangleShape2D_dinhu")
+
+[node name="Sprite2D" type="Sprite2D" parent="Coin"]
+texture_filter = 1
+texture = ExtResource("6_vtaks")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Coin"]
+stream = ExtResource("10_vtaks")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="HUD"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Score" type="Label" parent="HUD/Control"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -96.0
+offset_bottom = 54.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("1_kvpfn")
+theme_override_font_sizes/font_size = 48
+text = "99"
+horizontal_alignment = 1
+script = ExtResource("12_dinhu")
+
+[connection signal="body_entered" from="Coin2" to="Coin2" method="_on_body_entered"]
+[connection signal="coin_collected" from="Coin2" to="HUD/Control/Score" method="_on_coin_coin_collected"]
+[connection signal="finished" from="Coin2/AudioStreamPlayer2D" to="Coin2" method="_on_audio_stream_player_2d_finished"]
+[connection signal="body_entered" from="Coin" to="Coin" method="_on_body_entered"]
+[connection signal="coin_collected" from="Coin" to="HUD/Control/Score" method="_on_coin_coin_collected"]
+[connection signal="finished" from="Coin/AudioStreamPlayer2D" to="Coin" method="_on_audio_stream_player_2d_finished"]
