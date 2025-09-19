@@ -25,5 +25,4 @@ func _on_body_entered(body: Node2D) -> void:
 		
 # Officially remove the coin after the sound has finished playing.
 func _on_audio_stream_player_2d_finished() -> void:
-	print("done")
 	self.queue_free()
