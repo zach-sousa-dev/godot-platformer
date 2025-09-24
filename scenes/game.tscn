@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bu1vqdexh22q7"]
+[gd_scene load_steps=20 format=3 uid="uid://bu1vqdexh22q7"]
 
 [ext_resource type="FontFile" uid="uid://ddqfi5nrbi6vi" path="res://assets/Super Mario Bros. NES.ttf" id="1_kvpfn"]
 [ext_resource type="Texture2D" uid="uid://byaqjvjqpysh6" path="res://assets/world.png" id="1_u5sy4"]
@@ -9,9 +9,9 @@
 [ext_resource type="Texture2D" uid="uid://cqpllqmm3nduv" path="res://assets/mario_walk_2.png" id="6_vtaks"]
 [ext_resource type="Texture2D" uid="uid://c5cpgdbyxf2t0" path="res://assets/mario_walk_3.png" id="7_kvpfn"]
 [ext_resource type="AudioStream" uid="uid://c33ae02xjh0mq" path="res://assets/jump_small.wav" id="8_gee14"]
-[ext_resource type="Script" uid="uid://djxqb6fp28l15" path="res://scenes/coin.gd" id="9_0tnpc"]
-[ext_resource type="AudioStream" uid="uid://fxpgvibfxqg" path="res://assets/coin.wav" id="10_vtaks"]
-[ext_resource type="Script" uid="uid://bvbu4kjc3b827" path="res://scenes/coin_label.gd" id="12_dinhu"]
+[ext_resource type="PackedScene" uid="uid://bbwyqc56eey60" path="res://scenes/coin.tscn" id="9_kvpfn"]
+[ext_resource type="Texture2D" uid="uid://clttusc0v40dw" path="res://assets/coin_hud_1.png" id="10_dinhu"]
+[ext_resource type="Script" uid="uid://bvbu4kjc3b827" path="res://scripts/coin_label.gd" id="12_dinhu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mwb40"]
 size = Vector2(1410.5, 92)
@@ -77,8 +77,6 @@ animations = [{
 "speed": 8.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_dinhu"]
-
 [node name="Game" type="Node2D"]
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -133,38 +131,25 @@ shape = SubResource("RectangleShape2D_yqjtg")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="player"]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_dinhu")
-animation = &"run"
+animation = &"walk"
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="player"]
 stream = ExtResource("8_gee14")
 
-[node name="Coin2" type="Area2D" parent="."]
-position = Vector2(40, -126)
-script = ExtResource("9_0tnpc")
+[node name="Coin5" parent="." instance=ExtResource("9_kvpfn")]
+position = Vector2(79, -118)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Coin2"]
-shape = SubResource("RectangleShape2D_dinhu")
+[node name="Coin4" parent="." instance=ExtResource("9_kvpfn")]
+position = Vector2(63, -118)
 
-[node name="Sprite2D" type="Sprite2D" parent="Coin2"]
-texture_filter = 1
-texture = ExtResource("6_vtaks")
+[node name="Coin3" parent="." instance=ExtResource("9_kvpfn")]
+position = Vector2(79, -54)
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Coin2"]
-stream = ExtResource("10_vtaks")
+[node name="Coin2" parent="." instance=ExtResource("9_kvpfn")]
+position = Vector2(-33, -54)
 
-[node name="Coin" type="Area2D" parent="."]
-position = Vector2(150, -100)
-script = ExtResource("9_0tnpc")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Coin"]
-shape = SubResource("RectangleShape2D_dinhu")
-
-[node name="Sprite2D" type="Sprite2D" parent="Coin"]
-texture_filter = 1
-texture = ExtResource("6_vtaks")
-
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Coin"]
-stream = ExtResource("10_vtaks")
+[node name="Coin" parent="." instance=ExtResource("9_kvpfn")]
+position = Vector2(47, -118)
 
 [node name="HUD" type="CanvasLayer" parent="."]
 
@@ -176,24 +161,36 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Score" type="Label" parent="HUD/Control"]
+[node name="TextureRect" type="TextureRect" parent="HUD/Control"]
 texture_filter = 1
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -96.0
-offset_bottom = 54.0
+offset_left = -231.0
+offset_top = -34.0
+offset_right = -191.0
+offset_bottom = 6.0
 grow_horizontal = 0
+scale = Vector2(4.445, 4.445)
+texture = ExtResource("10_dinhu")
+stretch_mode = 3
+
+[node name="Score" type="Label" parent="HUD/Control"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.999132
+anchor_right = 0.999132
+offset_left = -157.0
+offset_top = 19.0
+offset_right = -125.0
+offset_bottom = 37.0
+grow_horizontal = 0
+scale = Vector2(3.95111, 3.95111)
 theme_override_fonts/font = ExtResource("1_kvpfn")
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 8
 text = "99"
 horizontal_alignment = 1
+vertical_alignment = 1
 script = ExtResource("12_dinhu")
-
-[connection signal="body_entered" from="Coin2" to="Coin2" method="_on_body_entered"]
-[connection signal="coin_collected" from="Coin2" to="HUD/Control/Score" method="_on_coin_coin_collected"]
-[connection signal="finished" from="Coin2/AudioStreamPlayer2D" to="Coin2" method="_on_audio_stream_player_2d_finished"]
-[connection signal="body_entered" from="Coin" to="Coin" method="_on_body_entered"]
-[connection signal="coin_collected" from="Coin" to="HUD/Control/Score" method="_on_coin_coin_collected"]
-[connection signal="finished" from="Coin/AudioStreamPlayer2D" to="Coin" method="_on_audio_stream_player_2d_finished"]
